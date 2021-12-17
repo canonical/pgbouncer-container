@@ -12,9 +12,7 @@ RUN chown -R pgbouncer: /etc/pgbouncer
 
 USER pgbouncer
 
-# TODO set port to an environment variable so it can be controlled from charm
-EXPOSE 6432
+# TODO figure out how exposed port can be controlled from charm
+EXPOSE 54321
 
-# docs say to run this as daemon, but this way we can let a user choose whether they want logs .
-# logs can also be found in /etc/pgbouncer/pgbouncer.log
-ENTRYPOINT pgbouncer pgbouncer.ini
+ENTRYPOINT pgbouncer /etc/pgbouncer/pgbouncer.ini
