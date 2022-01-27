@@ -15,17 +15,21 @@ Built for use in the pgbouncer k8s charm: https://github.com/canonical/pgbouncer
 
 ### Environment variables
 
-Pgbouncer won't run without the following environment variables passed in (no defaults are provided):
+Pgbouncer won't run without the following environment variables passed in:
 
 - `$PGB_DATABASES`
   - A string detailing the database config.
   - Schema available in the [pgbouncer documentation](https://www.pgbouncer.org/config.html#section-databases).
+  - No default provided.
 - `$PGB_LISTEN_PORT`
-  - Port on which PgBouncer listens for traffic
+  - Port on which PgBouncer listens for traffic.
+  - Default = 6432
 - `$PGB_LISTEN_ADDR`
-  - Address at which PgBouncer listens for traffic
+  - Address at which PgBouncer listens for traffic.
+  - Default = 0.0.0.0
 - `$PGB_ADMIN_USERS`
   - Comma-separated list of admin users.
+  - Default = "admin"
 - `$PGB_ADMIN_PASSWORDS`
   - Comma-separated list of admin passwords, corresponding to `$PGB_ADMIN_USERS`
   - These will be encrypted in future.

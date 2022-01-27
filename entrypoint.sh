@@ -1,34 +1,42 @@
 #!/bin/bash
+set -euo pipefail
 
-PGB_DIR=/etc/pgbouncer
-INI=$PGB_DIR/pgbouncer.ini
-USERLIST=$PGB_DIR/userlist.txt
+PGB_DIR="/etc/pgbouncer"
+INI="${PGB_DIR}/pgbouncer.ini"
+USERLIST="${PGB_DIR}/userlist.txt"
 
-rm $INI
-rm $USERLIST
+rm -f "${INI}" "${USERLIST}"
+
+if [[ -z "${PGB_DATABASES:-}" ]]; then
+  echo "Error: no databases specified in \$PGB_DATABASES" >2
+  exit 1
+fi
+
+if [ -z ${PGB_ADMIN_USERS+x} ]; then
+  PGB_ADMIN_USERS="admin"
+  PGB_ADMIN_PASSWORDS="pw"
+fi
 
 cat <<- END > $INI
     [databases]
     $PGB_DATABASES
 
     [pgbouncer]
-    listen_port = $PGB_LISTEN_PORT
-    listen_addr = $PGB_LISTEN_ADDR
+    listen_port = ${PGB_LISTEN_PORT:-6432}
+    listen_addr = ${PGB_LISTEN_ADDR:-0.0.0.0}
     auth_type = md5
     auth_file = $USERLIST
     logfile = $PGB_DIR/pgbouncer.log
     pidfile = $PGB_DIR/pgbouncer.pid
-    admin_users = $PGB_ADMIN_USERS
+    admin_users = ${PGB_ADMIN_USERS:-admin}
 END
-
-# TODO update to include proper encryption
 
 # convert comma-separated string variables to arrays.
 IFS=',' read -ra admin_array <<< "$PGB_ADMIN_USERS"
 IFS=',' read -ra password_array <<< "$PGB_ADMIN_PASSWORDS"
 
 # check every admin account has a corresponding password, and vice versa
-# TODO does every admin account need a password? this might be an edge case.
+# TODO does every admin account need a password? This might be an edge case.
 if (( ${#admin_array[@]} != ${#password_array[@]} )); then
     exit 1
 fi
