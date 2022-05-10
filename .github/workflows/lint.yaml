@@ -21,7 +21,7 @@ jobs:
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v1.6.0
         with:
-          dockerfile: Dockerfile
+          dockerfile: dockerfile
 
       - name: Lint Entrypoint Script
         uses: azohra/shell-linter@latest
