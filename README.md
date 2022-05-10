@@ -6,8 +6,6 @@ Built for use in the [pgbouncer k8s charm](https://github.com/canonical/pgbounce
 
 ## Usage, and connecting to a postgres container
 
-These docs are unfinished, and will be refined once this process is standardised.
-
 1. in one terminal, run the following:
     1. `docker pull postgres/postgres`
     1. `docker run --rm -P -e POSTGRES_PASSWORD=pw --name pg --hostname pg-host postgres`
@@ -37,3 +35,4 @@ Pgbouncer won't run without the following environment variables passed in:
   - These will be encrypted in future.
   - A default "pw" is provided if the default `$PGB_ADMIN_USERS` value is used, but otherwise no default is provided.
 
+    1. `docker run -rm --name pgbouncer:local`
