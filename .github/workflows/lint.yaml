@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 # Linter for CI of the PostgreSQL + Patroni docker image.
-name: Lint (Hadolint)
+name: Lint
 
 on:
   pull_request:

@@ -1,3 +1,6 @@
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 FROM ubuntu:20.04
 
 RUN useradd -M pgbouncer && \
