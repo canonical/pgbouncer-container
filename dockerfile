@@ -4,7 +4,7 @@ FROM ubuntu:20.04
 
 RUN useradd -M pgbouncer && \
     apt-get -y update && \
-    apt-get -y install pgbouncer && \
+    apt-get -y install pgbouncer=1.12.0-3 --no-install-recommends&& \
     rm -rf /var/lib/apt/lists/* && \
     chown -R pgbouncer /etc/pgbouncer
 
