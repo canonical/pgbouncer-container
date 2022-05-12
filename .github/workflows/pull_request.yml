@@ -62,14 +62,10 @@ jobs:
       - name: Deploy Image through Pods
         id: deploy
         run: |
-          # Deploy three pods to create a cluster with a leader and two replicas.
-          for i in 0 1 2
-          do
           # Pass environment variables and labels needed by pgbouncer
           kubectl run pgb-$i --image=pgbouncer:latest --image-pull-policy IfNotPresent \
             --env PGB_DATABASES="exampledb = host=pg-host port=5432 dbname=exampledb" \
             --labels 'application=pgbouncer,cluster-name=pg' \
             --override-type='strategic' \
-          done
-          # Wait for the pods to be in the running state.
+          # Wait for the pod to be in the running state.
           kubectl wait pods -l application=pgbouncer --for=jsonpath='{.status.phase}'='Running'
