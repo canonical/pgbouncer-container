@@ -27,7 +27,7 @@ jobs:
           # Do not publish the image.
           push: false
           # Set the tag to retrieve the image in Deploy tests.
-          tags: pgbouncer:latest
+          tags: pgbouncer:ci
           outputs: type=docker,dest=/tmp/image.tar
 
       - name: Upload image to be used in Deploy tests
@@ -63,7 +63,7 @@ jobs:
         id: deploy
         run: |
           # Pass environment variables and labels needed by pgbouncer
-          kubectl run pgb-$i --image=pgbouncer:latest --image-pull-policy IfNotPresent \
+          kubectl run pgb --image=pgbouncer:ci --image-pull-policy IfNotPresent \
             --env PGB_DATABASES="exampledb = host=pg-host port=5432 dbname=exampledb" \
             --labels 'application=pgbouncer,cluster-name=pg' \
             --override-type='strategic' \
