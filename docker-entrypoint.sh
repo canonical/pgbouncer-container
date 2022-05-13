@@ -8,7 +8,7 @@ USERLIST="${PGB_DIR}/userlist.txt"
 rm -f "${INI}" "${USERLIST}"
 
 if [[ -z "${PGB_DATABASES:-}" ]]; then
-  echo "Error: no databases specified in \$PGB_DATABASES" >2
+  echo "Error: no databases specified in \$PGB_DATABASES"
   exit 1
 fi
 

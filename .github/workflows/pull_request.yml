@@ -1,0 +1,71 @@
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+# CI testing for building and deploying PostgreSQL + Patroni docker image.
+name: Build and deploy
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Image and Export
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          # Do not publish the image.
+          push: false
+          # Set the tag to retrieve the image in Deploy tests.
+          tags: pgbouncer:ci
+          outputs: type=docker,dest=/tmp/image.tar
+
+      - name: Upload image to be used in Deploy tests
+        uses: actions/upload-artifact@v2
+        with:
+          name: image
+          path: /tmp/image.tar
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up microk8s
+        run: |
+          sudo snap install --classic microk8s
+          sudo usermod -a -G microk8s $USER
+          sudo microk8s status --wait-ready
+          sudo snap install kubectl --classic
+          # Write configuration to file for kubectl.
+          mkdir -p ${HOME}/.kube
+          /usr/bin/sg microk8s -c "microk8s config > ${HOME}/.kube/config"
+      - name: Download image built in Build tests
+        uses: actions/download-artifact@v2
+        with:
+          name: image
+          path: /tmp
+
+      - name: Load Image into microk8s
+        run: |
+          /usr/bin/sg microk8s -c "microk8s ctr image import /tmp/image.tar"
+      - name: Deploy Image through Pods
+        id: deploy
+        run: |
+          # Pass environment variables and labels needed by pgbouncer
+          kubectl run pgb --image=pgbouncer:ci --image-pull-policy IfNotPresent \
+            --env PGB_DATABASES="exampledb = host=pg-host port=5432 dbname=exampledb" \
+            --labels 'application=pgbouncer,cluster-name=pg' \
+            --override-type='strategic' \
+          # Wait for the pod to be in the running state.
+          kubectl wait pods -l application=pgbouncer --for=jsonpath='{.status.phase}'='Running'
