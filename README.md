@@ -35,4 +35,3 @@ Pgbouncer won't run without the following environment variables passed in:
   - These will be encrypted in future.
   - A default "pw" is provided if the default `$PGB_ADMIN_USERS` value is used, but otherwise no default is provided.
 
-    1. `docker run -rm --name pgbouncer:local`
