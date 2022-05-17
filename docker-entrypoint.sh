@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-PGB_DIR="/etc/pgbouncer"
+PGB_DIR="/var/lib/postgresql/pgbouncer"
 INI="${PGB_DIR}/pgbouncer.ini"
 USERLIST="${PGB_DIR}/userlist.txt"
 
