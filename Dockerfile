@@ -3,7 +3,9 @@
 FROM ubuntu:22.04
 
 RUN apt-get -y update && \
-    apt-get -y install pgbouncer=1.16.1-1ubuntu1 --no-install-recommends && \
+    DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC \
+    apt-get -y install pgbouncer=1.16.1-1ubuntu1 pgbackrest \
+      --no-install-recommends && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /var/lib/postgresql/pgbouncer && \
     chown postgres /var/lib/postgresql/pgbouncer
