@@ -1,9 +1,9 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get -y update && \
-    apt-get -y install pgbouncer=1.12.0-3 --no-install-recommends && \
+    apt-get -y install pgbouncer=1.16.1-1ubuntu1 --no-install-recommends && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /var/lib/postgresql/pgbouncer && \
     chown postgres /var/lib/postgresql/pgbouncer
